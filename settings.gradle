@@ -1,0 +1,4 @@
+rootProject.name = 'kilobolt'
+
+include 'app'
+
