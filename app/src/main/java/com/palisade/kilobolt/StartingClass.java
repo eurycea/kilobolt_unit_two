@@ -96,27 +96,22 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
     public void keyPressed(KeyEvent keyEvent) {
         switch(keyEvent.getKeyCode()){
             case KeyEvent.VK_UP:
-                System.out.println("up pressed");
                 break;
             case KeyEvent.VK_DOWN:
-                System.out.println("down pressed");
                 if(!mRobot.isJumped()){
                     mRobot.setDucked(true);
                     mRobot.setSpeedX(0);
                 }
                 break;
             case KeyEvent.VK_LEFT:
-                System.out.println("left pressed");
                 mRobot.moveLeft();
                 mRobot.setMovingLeft(true);
                 break;
             case KeyEvent.VK_RIGHT:
-                System.out.println("right pressed");
                 mRobot.moveRight();
                 mRobot.setMovingRight(true);
                 break;
             case KeyEvent.VK_SPACE:
-                System.out.println("space pressed");
                 mRobot.jump();
                 break;
         }
@@ -126,22 +121,17 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
     public void keyReleased(KeyEvent keyEvent) {
         switch(keyEvent.getKeyCode()){
             case KeyEvent.VK_UP:
-                log("up released");
                 break;
             case KeyEvent.VK_DOWN:
-                log("down released");
                 mRobot.setDucked(false);
                 break;
             case KeyEvent.VK_LEFT:
-                log("left released");
                 mRobot.stopLeft();
                 break;
             case KeyEvent.VK_RIGHT:
-                log("right released");
                 mRobot.stopRight();
                 break;
             case KeyEvent.VK_SPACE:
-                log("space released");
                 break;
 
         }

@@ -3,6 +3,7 @@ package com.palisade.kilobolt;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Created by nicholascraig on 9/29/14.
@@ -12,6 +13,9 @@ public class Robot {
     public static final String RES_STANDING = "character.png";
     public static final String RES_DUCKED = "character_ducked.png";
     public static final String RES_JUMPED = "character_jumped.png";
+
+    private HashMap<SpriteState, Image> imageHashMap = new HashMap<SpriteState, Image>();
+
     final int JUMPSPEED = -15;
     final int MOVESPEED = 5;
     final int GROUND = 382;
@@ -42,7 +46,7 @@ public class Robot {
         }
 
         if (speedX <= 0) {
-            app.log("Do not scroll the background.");
+//            app.log("Do not scroll the background.");
             app.setBackgroundSpeed(0);
         }
         if (centerX <= 200 && speedX > 0) {
@@ -65,6 +69,7 @@ public class Robot {
                 centerY = GROUND;
                 speedY = 0;
                 jumped = false;
+                mSpriteState = SpriteState.STANDING;
             }
         }
 
@@ -113,6 +118,7 @@ public class Robot {
         if (!jumped) {
             speedY = JUMPSPEED;
             jumped = true;
+            mSpriteState = SpriteState.JUMPING;
         }
 
     }
@@ -128,19 +134,26 @@ public class Robot {
         return url;
     }
     public Image getImage(){
-        String resourceName = null;
-        switch (mSpriteState){
-            case STANDING:
-                resourceName = RES_STANDING;
-                break;
-            case DUCKED:
-                resourceName = RES_DUCKED;
-                break;
-            case JUMPING:
-                resourceName = RES_JUMPED;
-                break;
+        if(imageHashMap.containsKey(mSpriteState)){
+            return imageHashMap.get(mSpriteState);
+        } else {
+            app.log("loading image from resources");
+            String resourceName = null;
+            switch (mSpriteState) {
+                case STANDING:
+                    resourceName = RES_STANDING;
+                    break;
+                case DUCKED:
+                    resourceName = RES_DUCKED;
+                    break;
+                case JUMPING:
+                    resourceName = RES_JUMPED;
+                    break;
+            }
+            Image image = app.getImage(getImageURL(resourceName));
+            imageHashMap.put(mSpriteState, image);
+            return image;
         }
-        return app.getImage(getImageURL(resourceName));
 
     }
     public enum SpriteState{
