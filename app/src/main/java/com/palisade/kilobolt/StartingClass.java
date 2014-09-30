@@ -4,19 +4,18 @@ import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by nicholascraig on 9/28/14.
  */
 public class StartingClass extends Applet implements Runnable, KeyListener {
     private Robot mRobot;
-    private Image mImage, character;
-    private URL base;
+    private Image mImage;
+    private Image mCharacterImage;
     private Graphics second;
+    private Background mBackgroundOne;
+    private Background mBackgroundTwo;
+    private Image mBackgroundImage;
 
     @Override
     public void init() {
@@ -27,14 +26,16 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
         Frame frame = (Frame) this.getParent().getParent();
         frame.setTitle("Q-Bot Alpha");
         addKeyListener(this);
-
-        character = getImage(Robot.getImageURL(this.getClass()));
+        mBackgroundImage = getImage(Background.getImageURL(this));
     }
 
     @Override
     public void start() {
         super.start();
-        mRobot = new Robot();
+        mBackgroundOne = new Background(0,0);
+        mBackgroundTwo = new Background(2160, 0);
+        mRobot = new Robot(this);
+        mCharacterImage = mRobot.getImage();
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -53,6 +54,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
     public void run() {
         while(true){
             mRobot.update();
+            mCharacterImage = mRobot.getImage();
+            mBackgroundOne.update();
+            mBackgroundTwo.update();
             repaint();
             try{
                 Thread.sleep(17);
@@ -78,7 +82,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
     @Override
     public void paint(Graphics graphics) {
-        graphics.drawImage(character, mRobot.getCenterX()-61, mRobot.getCenterY()-63, this);
+        graphics.drawImage(mBackgroundImage, mBackgroundOne.getX(), mBackgroundOne.getY(), this);
+        graphics.drawImage(mBackgroundImage, mBackgroundTwo.getX(), mBackgroundTwo.getY(), this);
+        graphics.drawImage(mCharacterImage, mRobot.getCenterX()-61, mRobot.getCenterY()-63, this);
     }
 
     @Override
@@ -94,20 +100,25 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
                 break;
             case KeyEvent.VK_DOWN:
                 System.out.println("down pressed");
+                if(!mRobot.isJumped()){
+                    mRobot.setDucked(true);
+                    mRobot.setSpeedX(0);
+                }
                 break;
             case KeyEvent.VK_LEFT:
                 System.out.println("left pressed");
                 mRobot.moveLeft();
+                mRobot.setMovingLeft(true);
                 break;
             case KeyEvent.VK_RIGHT:
                 System.out.println("right pressed");
                 mRobot.moveRight();
+                mRobot.setMovingRight(true);
                 break;
             case KeyEvent.VK_SPACE:
                 System.out.println("space pressed");
                 mRobot.jump();
                 break;
-
         }
     }
 
@@ -119,14 +130,15 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
                 break;
             case KeyEvent.VK_DOWN:
                 log("down released");
+                mRobot.setDucked(false);
                 break;
             case KeyEvent.VK_LEFT:
                 log("left released");
-                mRobot.stop();
+                mRobot.stopLeft();
                 break;
             case KeyEvent.VK_RIGHT:
                 log("right released");
-                mRobot.stop();
+                mRobot.stopRight();
                 break;
             case KeyEvent.VK_SPACE:
                 log("space released");
@@ -134,7 +146,18 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
         }
     }
-    private void log(String msg){
+    public void setBackgroundSpeed(int speed){
+        mBackgroundOne.setSpeedX(speed);
+        mBackgroundTwo.setSpeedX(speed);
+    }
+    public Background getBackgroundOne() {
+        return mBackgroundOne;
+    }
+
+    public Background getBackgroundTwo() {
+        return mBackgroundTwo;
+    }
+    public void log(String msg){
         System.out.println(msg);
     }
 }
