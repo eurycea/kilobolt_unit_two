@@ -1,21 +1,27 @@
 package com.palisade.kilobolt;
 
+import com.palisade.kilobolt.graphic.Background;
+import com.palisade.kilobolt.graphic.BaseBackground;
+import com.palisade.kilobolt.graphic.ImageHolder;
+import com.palisade.kilobolt.actor.Robot;
+
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- * Created by nicholascraig on 9/28/14.
- */
+
 public class StartingClass extends Applet implements Runnable, KeyListener {
-    private Robot mRobot;
+    private com.palisade.kilobolt.actor.Robot mRobot;
     private Image mImage;
     private Image mCharacterImage;
     private Graphics second;
     private Background mBackgroundOne;
     private Background mBackgroundTwo;
+    private BaseBackground mBackground;
     private Image mBackgroundImage;
+    private ImageHolder sImageHolder;
+    private final int BACKGROUND_WIDTH = 2160;
 
     @Override
     public void init() {
@@ -26,14 +32,17 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
         Frame frame = (Frame) this.getParent().getParent();
         frame.setTitle("Q-Bot Alpha");
         addKeyListener(this);
-        mBackgroundImage = getImage(Background.getImageURL(this));
+        //mBackgroundImage = getImage(Background.getImageURL(this));
+        sImageHolder = ImageHolder.getInstance(this);
+        mBackground = new BaseBackground(BACKGROUND_WIDTH);
     }
 
     @Override
     public void start() {
         super.start();
-        mBackgroundOne = new Background(0,0);
-        mBackgroundTwo = new Background(2160, 0);
+        mBackground.addBackgroundSegments(2, "background.png");
+        //mBackgroundOne = new Background(0,0);
+        //mBackgroundTwo = new Background(2160, 0);
         mRobot = new Robot(this);
         mCharacterImage = mRobot.getImage();
         Thread thread = new Thread(this);
@@ -55,8 +64,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
         while(true){
             mRobot.update();
             mCharacterImage = mRobot.getImage();
-            mBackgroundOne.update();
-            mBackgroundTwo.update();
+            mBackground.update();
             repaint();
             try{
                 Thread.sleep(17);
@@ -82,8 +90,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 
     @Override
     public void paint(Graphics graphics) {
-        graphics.drawImage(mBackgroundImage, mBackgroundOne.getX(), mBackgroundOne.getY(), this);
-        graphics.drawImage(mBackgroundImage, mBackgroundTwo.getX(), mBackgroundTwo.getY(), this);
+        mBackground.draw(graphics);
         graphics.drawImage(mCharacterImage, mRobot.getCenterX()-61, mRobot.getCenterY()-63, this);
     }
 
@@ -137,8 +144,9 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
         }
     }
     public void setBackgroundSpeed(int speed){
-        mBackgroundOne.setSpeedX(speed);
-        mBackgroundTwo.setSpeedX(speed);
+        mBackground.setSpeed(speed);
+        //mBackgroundOne.setSpeedX(speed);
+        //mBackgroundTwo.setSpeedX(speed);
     }
     public Background getBackgroundOne() {
         return mBackgroundOne;
@@ -150,4 +158,6 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
     public void log(String msg){
         System.out.println(msg);
     }
+
+
 }

@@ -1,13 +1,12 @@
-package com.palisade.kilobolt;
+package com.palisade.kilobolt.actor;
+
+import com.palisade.kilobolt.StartingClass;
+import com.palisade.kilobolt.graphic.ImageHolder;
 
 import java.awt.*;
-import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 
-/**
- * Created by nicholascraig on 9/29/14.
- */
+
 public class Robot {
     private StartingClass app;
     public static final String RES_STANDING = "character.png";
@@ -33,10 +32,12 @@ public class Robot {
     private int speedY=1;
 
     private SpriteState mSpriteState;
+    private ImageHolder sImageHolder;
 
     public Robot(StartingClass app) {
         this.app = app;
         mSpriteState = SpriteState.STANDING;
+        sImageHolder = ImageHolder.getInstance();
     }
 
     public void update(){
@@ -122,39 +123,24 @@ public class Robot {
         }
 
     }
-    private URL getImageURL(String resource){
-        URL url = null;
-        try{
-            ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(resource).getFile());
-            url = file.toURI().toURL();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return url;
-    }
-    public Image getImage(){
-        if(imageHashMap.containsKey(mSpriteState)){
-            return imageHashMap.get(mSpriteState);
-        } else {
-            app.log("loading image from resources");
-            String resourceName = null;
-            switch (mSpriteState) {
-                case STANDING:
-                    resourceName = RES_STANDING;
-                    break;
-                case DUCKED:
-                    resourceName = RES_DUCKED;
-                    break;
-                case JUMPING:
-                    resourceName = RES_JUMPED;
-                    break;
-            }
-            Image image = app.getImage(getImageURL(resourceName));
-            imageHashMap.put(mSpriteState, image);
-            return image;
-        }
 
+    public Image getImage(){
+        return sImageHolder.getImage(getCurrentResource());
+    }
+    private String getCurrentResource(){
+        String resourceName = null;
+        switch (mSpriteState) {
+            case STANDING:
+                resourceName = RES_STANDING;
+                break;
+            case DUCKED:
+                resourceName = RES_DUCKED;
+                break;
+            case JUMPING:
+                resourceName = RES_JUMPED;
+                break;
+        }
+        return resourceName;
     }
     public enum SpriteState{
         STANDING, DUCKED, JUMPING

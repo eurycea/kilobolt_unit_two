@@ -1,11 +1,8 @@
-package com.palisade.kilobolt;
+package com.palisade.kilobolt.graphic;
 
 import java.io.File;
 import java.net.URL;
 
-/**
- * Created by nicholascraig on 9/29/14.
- */
 public class Background {
 
     public static final String RES = "background.png";
