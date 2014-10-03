@@ -1,6 +1,7 @@
 package com.palisade.kilobolt.actor;
 
 import com.palisade.kilobolt.StartingClass;
+import com.palisade.kilobolt.constant.Constants;
 import com.palisade.kilobolt.graphic.ImageHolder;
 
 import java.awt.*;
@@ -9,11 +10,6 @@ import java.util.HashMap;
 
 public class Robot {
     private StartingClass app;
-    public static final String RES_STANDING = "character.png";
-    public static final String RES_DUCKED = "character_ducked.png";
-    public static final String RES_JUMPED = "character_jumped.png";
-
-    private HashMap<SpriteState, Image> imageHashMap = new HashMap<SpriteState, Image>();
 
     final int JUMPSPEED = -15;
     final int MOVESPEED = 5;
@@ -34,7 +30,14 @@ public class Robot {
     private SpriteState mSpriteState;
     private ImageHolder sImageHolder;
 
+    private MainCharacterInterface mMainCharacterCallback;
+
     public Robot(StartingClass app) {
+        try{
+            mMainCharacterCallback = (MainCharacterInterface) app;
+        }catch (ClassCastException e){
+            throw new ClassCastException(app.getClass() + " must implement MainCharacterInterface");
+        }
         this.app = app;
         mSpriteState = SpriteState.STANDING;
         sImageHolder = ImageHolder.getInstance();
@@ -47,14 +50,13 @@ public class Robot {
         }
 
         if (speedX <= 0) {
-//            app.log("Do not scroll the background.");
-            app.setBackgroundSpeed(0);
+            mMainCharacterCallback.setBackgroundSpeed(0);
         }
         if (centerX <= 200 && speedX > 0) {
             centerX += speedX;
         }
         if (speedX > 0 && centerX >200){
-            app.setBackgroundSpeed(-MOVESPEED);
+            mMainCharacterCallback.setBackgroundSpeed(-MOVESPEED);
         }
 
         // Updates Y Position
@@ -131,13 +133,13 @@ public class Robot {
         String resourceName = null;
         switch (mSpriteState) {
             case STANDING:
-                resourceName = RES_STANDING;
+                resourceName = Constants.RES_MAIN_CHARACHTER_STANDING;
                 break;
             case DUCKED:
-                resourceName = RES_DUCKED;
+                resourceName = Constants.RES_MAIN_CHARACHTER_DUCKED;
                 break;
             case JUMPING:
-                resourceName = RES_JUMPED;
+                resourceName = Constants.RES_MAIN_CHARACHTER_JUMPED;
                 break;
         }
         return resourceName;
