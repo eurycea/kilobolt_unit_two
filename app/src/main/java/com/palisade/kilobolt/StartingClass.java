@@ -6,6 +6,7 @@ import com.palisade.kilobolt.constant.TextConstants;
 import com.palisade.kilobolt.graphic.BaseBackground;
 import com.palisade.kilobolt.graphic.ImageHolder;
 import com.palisade.kilobolt.actor.Robot;
+import com.palisade.kilobolt.stat.Mobility;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -117,6 +118,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
             case KeyEvent.VK_SPACE:
                 mRobot.jump();
                 break;
+            case KeyEvent.VK_F:
+                Mobility.sinusoidalOffset(15);
         }
     }
 
