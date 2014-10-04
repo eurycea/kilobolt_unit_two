@@ -36,7 +36,7 @@ public class Robot implements DrawActorInterface{
 
     private Mobility mMobility;
 
-    private SpriteState mSpriteState;
+    private  SpriteState mSpriteState;
     private ImageHolder sImageHolder;
 
     private MainCharacterInterface mMainCharacterCallback;
@@ -94,13 +94,13 @@ public class Robot implements DrawActorInterface{
     }
 
     public void update(){
-        handleXMovement();
-        handleYMovement();
-        handleJumping();
-        handleLeftOutOfBounds();
+        updateXMovement();
+        updateYMovement();
+        updateJumping();
+        updateCheckLeftOutOfBounds();
     }
 
-    private void handleXMovement(){
+    private void updateXMovement(){
         // Moves Character or Scrolls Background accordingly.
         if(mMobility.isMovingLeft()){
             mCoordinate.moveHorizontal(mMobility.getCurrentSpeedX());
@@ -116,15 +116,14 @@ public class Robot implements DrawActorInterface{
         }
     }
 
-    private void handleLeftOutOfBounds(){
+    private void updateCheckLeftOutOfBounds(){
         if(mCoordinate.getX() + mMobility.getCurrentSpeedX() <= LEFT_MOVEMENT_BARRIER){
             mCoordinate.setX(LEFT_MOVEMENT_BARRIER+1);
         }
     }
 
-    private void handleJumping(){
+    private void updateJumping(){
         if (jumped){
-            System.out.println("#handleJumping jumped");
             mMobility.accelerateY(1);
             if(mCoordinate.getY() + mMobility.getCurrentSpeedY() >= GROUND){//going to fall through ground
                 mCoordinate.setY(GROUND);//land on ground
@@ -136,7 +135,7 @@ public class Robot implements DrawActorInterface{
         }
     }
 
-    private void handleYMovement(){
+    private void updateYMovement(){
         mCoordinate.moveVertical(mMobility.getCurrentSpeedY());
         if(mCoordinate.getY() + mMobility.getCurrentSpeedY() >= GROUND){
             mCoordinate.setY(GROUND);
@@ -182,7 +181,6 @@ public class Robot implements DrawActorInterface{
     }
 
     public void jump() {
-        System.out.println("#jump");
         if (!jumped) {
             mMobility.startMovingUp();
             jumped = true;
@@ -228,6 +226,10 @@ public class Robot implements DrawActorInterface{
     }
 
     private Point buildPointForDraw(){
+        if(!isJumped() && !isDucked()){
+            final int vOffset = VERTICAL_CENTER_OFFSET - Math.abs(Mobility.sinusoidalOffset(10));
+            return mCoordinate.pointFromOffsetPosition(HORIZTONAL_CENTER_OFFSET, vOffset);
+        }
         return mCoordinate.pointFromOffsetPosition(HORIZTONAL_CENTER_OFFSET, VERTICAL_CENTER_OFFSET);
     }
 

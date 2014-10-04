@@ -16,13 +16,9 @@ public class Mobility {
     public static int sinusoidalOffset(int hoverMagnitude){
         double workingDouble = System.currentTimeMillis();
         workingDouble = workingDouble%1000;
-        System.out.println(workingDouble);
         workingDouble = workingDouble / 1000;
-        System.out.println(workingDouble);
         workingDouble = Math.sin(workingDouble * Math.PI*2);
-        System.out.println(workingDouble);
         workingDouble = workingDouble * hoverMagnitude;
-        System.out.println(workingDouble);
         return  (int) workingDouble;
     }
 
@@ -47,7 +43,6 @@ public class Mobility {
     }
 
     public void startMovingUp(){
-        System.out.println("#startMovingUp setting current speed y to "+ getMoveSpeedY());
         setCurrentSpeedY(getMoveSpeedY());
     }
     public void stopMovingY(){
