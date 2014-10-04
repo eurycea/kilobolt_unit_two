@@ -25,7 +25,7 @@ public class Point {
         return distance;
     }
 
-    protected Point setPosition(int x, int y){
+    public Point setPosition(int x, int y){
         setX(x);
         setY(y);
         return this;

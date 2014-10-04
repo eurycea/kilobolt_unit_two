@@ -6,6 +6,7 @@ import com.palisade.kilobolt.graphic.DrawActorInterface;
 import com.palisade.kilobolt.graphic.ImageHolder;
 import com.palisade.kilobolt.location.Coordinate;
 import com.palisade.kilobolt.location.Point;
+import com.palisade.kilobolt.stat.Health;
 import com.palisade.kilobolt.stat.Mobility;
 
 import java.applet.Applet;
@@ -13,32 +14,30 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 
-public class Robot implements DrawActorInterface{
+public class Robot implements DrawActorInterface, Health.HasHealth{
 
     final int JUMPSPEED = -15;
     final int MOVESPEED = 5;
     final int STATIC_Y_SPEED = 1;
-
+    final int MAX_HEALTH = 100;
     final int GROUND = 382;
     final int START_CENTER_X = 100;
     final int START_CENTER_Y = 383;
     final int RIGHT_MOVEMENT_BARRIER = 200;
     final int LEFT_MOVEMENT_BARRIER = 60;
-    final int HORIZTONAL_CENTER_OFFSET = -61;
-    final int VERTICAL_CENTER_OFFSET = -63;
-
-    private Coordinate mCoordinate;
+    final int HORIZTONAL_CENTER_OFFSET = 61;
+    final int VERTICAL_CENTER_OFFSET = 63;
 
     private boolean jumped = false;
     private boolean movingLeft = false;
     private boolean movingRight = false;
     private boolean ducked = false;
 
+    private SpriteState mSpriteState;
     private Mobility mMobility;
-
-    private  SpriteState mSpriteState;
+    private Coordinate mCoordinate;
+    private Health mHealth;
     private ImageHolder sImageHolder;
-
     private MainCharacterInterface mMainCharacterCallback;
 
     public Robot(Applet app) {
@@ -52,8 +51,8 @@ public class Robot implements DrawActorInterface{
 
         mMobility = new Mobility(MOVESPEED, JUMPSPEED);
         mMobility.setCurrentSpeedY(STATIC_Y_SPEED);
-
         mCoordinate = new Coordinate(START_CENTER_X, START_CENTER_Y);
+        mHealth = new Health(MAX_HEALTH);
     }
 
     public void handleKeyPressedEvent(int eventCode){
@@ -218,18 +217,19 @@ public class Robot implements DrawActorInterface{
 
     @Override
     public void draw(Graphics graphics) {
-        sImageHolder.draw(graphics, getCurrentImage(), buildPointForDraw());
+        sImageHolder.draw(graphics, getCurrentImage(), getCurrentPoint());
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        mHealth.damage(damage);
     }
 
     public enum SpriteState{
         STANDING, DUCKED, JUMPING
     }
 
-    private Point buildPointForDraw(){
-        if(!isJumped() && !isDucked()){
-            final int vOffset = VERTICAL_CENTER_OFFSET - Math.abs(Mobility.sinusoidalOffset(10));
-            return mCoordinate.pointFromOffsetPosition(HORIZTONAL_CENTER_OFFSET, vOffset);
-        }
+    private Point getCurrentPoint(){
         return mCoordinate.pointFromOffsetPosition(HORIZTONAL_CENTER_OFFSET, VERTICAL_CENTER_OFFSET);
     }
 
@@ -265,6 +265,9 @@ public class Robot implements DrawActorInterface{
     public void setJumped(boolean jumped) {
         this.jumped = jumped;
         mSpriteState = jumped ? SpriteState.JUMPING : SpriteState.STANDING;
+    }
+    public Coordinate getCoordinate(){
+        return mCoordinate;
     }
 
 }

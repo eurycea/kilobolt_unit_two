@@ -11,7 +11,6 @@ public class Coordinate extends Point {
         mOrigin = new Point(x,y);
     }
 
-
     public void moveDown(int distance){
         setY(getY() + Math.abs(distance));
     }
@@ -42,7 +41,7 @@ public class Coordinate extends Point {
         return new Point(getX(), getY());
     }
     public final Point pointFromOffsetPosition( int horizontalOffset, int verticalOffset){
-        return new Point(getX()+horizontalOffset, getY()+verticalOffset);
+        return new Point(getX()-horizontalOffset, getY()-verticalOffset);
     }
 
     public double distanceFromOrigin(){

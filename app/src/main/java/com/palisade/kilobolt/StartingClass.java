@@ -1,11 +1,14 @@
 package com.palisade.kilobolt;
 
+import com.palisade.kilobolt.actor.AbstractEnemy;
+import com.palisade.kilobolt.actor.Heliboy;
 import com.palisade.kilobolt.actor.MainCharacterInterface;
 import com.palisade.kilobolt.constant.Constants;
 import com.palisade.kilobolt.constant.TextConstants;
 import com.palisade.kilobolt.graphic.BaseBackground;
 import com.palisade.kilobolt.graphic.ImageHolder;
 import com.palisade.kilobolt.actor.Robot;
+import com.palisade.kilobolt.location.Coordinate;
 import com.palisade.kilobolt.stat.Mobility;
 
 import java.applet.Applet;
@@ -14,8 +17,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-public class StartingClass extends Applet implements Runnable, KeyListener, MainCharacterInterface {
+public class StartingClass extends Applet implements Runnable, KeyListener, MainCharacterInterface, AbstractEnemy.EnemyInterface {
     private com.palisade.kilobolt.actor.Robot mRobot;
+    private Heliboy heliboy1, heliboy2;
     private Image mImage;
     private Graphics second;
     private BaseBackground mBackground;
@@ -40,6 +44,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
         super.start();
         mBackground.addBackgroundSegments(2, Constants.RES_BACKGROUND);
         mRobot = new Robot(this);
+        heliboy1 = new Heliboy(this, 340, 360);
+        heliboy2 = new Heliboy(this, 700, 360);
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -59,6 +65,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
         while(true){
             mRobot.update();
             mBackground.update();
+            heliboy1.update();
+            heliboy2.update();
             repaint();
             try{
                 Thread.sleep(17);
@@ -86,6 +94,8 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
     public void paint(Graphics graphics) {
         mBackground.draw(graphics);
         mRobot.draw(graphics);
+        heliboy2.draw(graphics);
+        heliboy1.draw(graphics);
     }
 
     @Override
@@ -123,4 +133,13 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
         System.out.println(msg);
     }
 
+    @Override
+    public int getReferenceSpeed() {
+        return mBackground.getSpeed();
+    }
+
+    @Override
+    public boolean isInRangeOfMainCharacter(Coordinate coordinate, int attackRange) {
+        return mRobot.getCoordinate().distanceFromPoint(coordinate) < attackRange;
+    }
 }
