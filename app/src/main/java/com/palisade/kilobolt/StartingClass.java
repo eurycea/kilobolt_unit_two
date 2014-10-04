@@ -17,7 +17,6 @@ import java.awt.event.KeyListener;
 public class StartingClass extends Applet implements Runnable, KeyListener, MainCharacterInterface {
     private com.palisade.kilobolt.actor.Robot mRobot;
     private Image mImage;
-    private Image mCharacterImage;
     private Graphics second;
     private BaseBackground mBackground;
     private ImageHolder sImageHolder;
@@ -41,7 +40,6 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
         super.start();
         mBackground.addBackgroundSegments(2, Constants.RES_BACKGROUND);
         mRobot = new Robot(this);
-        mCharacterImage = mRobot.getImage();
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -60,7 +58,6 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
     public void run() {
         while(true){
             mRobot.update();
-            mCharacterImage = mRobot.getImage();
             mBackground.update();
             repaint();
             try{
@@ -88,7 +85,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
     @Override
     public void paint(Graphics graphics) {
         mBackground.draw(graphics);
-        graphics.drawImage(mCharacterImage, mRobot.getCenterX()-61, mRobot.getCenterY()-63, this);
+        mRobot.draw(graphics);
     }
 
     @Override
@@ -98,48 +95,22 @@ public class StartingClass extends Applet implements Runnable, KeyListener, Main
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
+        mRobot.handleKeyPressedEvent(keyEvent.getKeyCode());
+
         switch(keyEvent.getKeyCode()){
-            case KeyEvent.VK_UP:
-                break;
-            case KeyEvent.VK_DOWN:
-                if(!mRobot.isJumped()){
-                    mRobot.setDucked(true);
-                    mRobot.setSpeedX(0);
-                }
-                break;
-            case KeyEvent.VK_LEFT:
-                mRobot.moveLeft();
-                mRobot.setMovingLeft(true);
-                break;
-            case KeyEvent.VK_RIGHT:
-                mRobot.moveRight();
-                mRobot.setMovingRight(true);
-                break;
-            case KeyEvent.VK_SPACE:
-                mRobot.jump();
-                break;
             case KeyEvent.VK_F:
-                Mobility.sinusoidalOffset(15);
+                log("final sine offset: "+Mobility.sinusoidalOffset(15));
+                break;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
+        mRobot.handleKeyReleasedEvent(keyEvent.getKeyCode());
         switch(keyEvent.getKeyCode()){
-            case KeyEvent.VK_UP:
+            case KeyEvent.VK_F:
+                log("final sine offset: "+Mobility.sinusoidalOffset(15));
                 break;
-            case KeyEvent.VK_DOWN:
-                mRobot.setDucked(false);
-                break;
-            case KeyEvent.VK_LEFT:
-                mRobot.stopLeft();
-                break;
-            case KeyEvent.VK_RIGHT:
-                mRobot.stopRight();
-                break;
-            case KeyEvent.VK_SPACE:
-                break;
-
         }
     }
 

@@ -41,6 +41,9 @@ public class Coordinate extends Point {
     public Point pointFromCurrentPosition(){
         return new Point(getX(), getY());
     }
+    public final Point pointFromOffsetPosition( int horizontalOffset, int verticalOffset){
+        return new Point(getX()+horizontalOffset, getY()+verticalOffset);
+    }
 
     public double distanceFromOrigin(){
         return distanceFromPoint(mOrigin);

@@ -5,11 +5,11 @@ import com.palisade.kilobolt.location.Coordinate;
 
 import java.awt.*;
 
-public class BackgroundSegment {
+public class BackgroundSegment implements DrawActorInterface{
     private String mResource;
     private int width;
     private Coordinate mCoordinate;
-    private ImageHolder mImageHolder;
+    private ImageHolder sImageHolder;
     private int id = -1;
 
     public BackgroundSegment(){
@@ -22,7 +22,7 @@ public class BackgroundSegment {
         this.mResource = resource;
         this.width = width;
         mCoordinate = new Coordinate(startX, startY);
-        mImageHolder = ImageHolder.getInstance();
+        sImageHolder = ImageHolder.getInstance();
     }
 
     public void scrollPosition(int distance){
@@ -30,7 +30,7 @@ public class BackgroundSegment {
     }
 
     public Image getCurrentImage(){
-        return mImageHolder.getImage(mResource);
+        return sImageHolder.getImage(mResource);
     }
 
     public void update(int speed){
@@ -40,8 +40,9 @@ public class BackgroundSegment {
         }
     }
 
+    @Override
     public void draw(Graphics graphics){
-        mImageHolder.draw(graphics, getCurrentImage(),  mCoordinate.pointFromCurrentPosition());
+        sImageHolder.draw(graphics, getCurrentImage(), mCoordinate.pointFromCurrentPosition());
     }
     public void setId(int id){
         this.id = id;

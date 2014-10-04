@@ -31,10 +31,10 @@ public class Point {
         return this;
     }
 
-    protected void setX(int x){
+    public void setX(int x){
         this.pointX = x;
     }
-    protected void setY(int y){
+    public void setY(int y){
         this.pointY = y;
     }
     public int getX(){

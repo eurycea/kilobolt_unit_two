@@ -1,95 +1,159 @@
 package com.palisade.kilobolt.actor;
 
-import com.palisade.kilobolt.StartingClass;
+
 import com.palisade.kilobolt.constant.Constants;
+import com.palisade.kilobolt.graphic.DrawActorInterface;
 import com.palisade.kilobolt.graphic.ImageHolder;
+import com.palisade.kilobolt.location.Coordinate;
+import com.palisade.kilobolt.location.Point;
+import com.palisade.kilobolt.stat.Mobility;
 
+import java.applet.Applet;
 import java.awt.*;
-import java.util.HashMap;
+import java.awt.event.KeyEvent;
 
 
-public class Robot {
-    private StartingClass app;
+public class Robot implements DrawActorInterface{
 
     final int JUMPSPEED = -15;
     final int MOVESPEED = 5;
-    final int GROUND = 382;
+    final int STATIC_Y_SPEED = 1;
 
-    private int centerX = 100;
-    private int centerY = 383;
+    final int GROUND = 382;
+    final int START_CENTER_X = 100;
+    final int START_CENTER_Y = 383;
+    final int RIGHT_MOVEMENT_BARRIER = 200;
+    final int LEFT_MOVEMENT_BARRIER = 60;
+    final int HORIZTONAL_CENTER_OFFSET = -61;
+    final int VERTICAL_CENTER_OFFSET = -63;
+
+    private Coordinate mCoordinate;
 
     private boolean jumped = false;
     private boolean movingLeft = false;
     private boolean movingRight = false;
     private boolean ducked = false;
 
-
-    private int speedX=0;
-    private int speedY=1;
+    private Mobility mMobility;
 
     private SpriteState mSpriteState;
     private ImageHolder sImageHolder;
 
     private MainCharacterInterface mMainCharacterCallback;
 
-    public Robot(StartingClass app) {
+    public Robot(Applet app) {
         try{
             mMainCharacterCallback = (MainCharacterInterface) app;
         }catch (ClassCastException e){
             throw new ClassCastException(app.getClass() + " must implement MainCharacterInterface");
         }
-        this.app = app;
         mSpriteState = SpriteState.STANDING;
         sImageHolder = ImageHolder.getInstance();
+
+        mMobility = new Mobility(MOVESPEED, JUMPSPEED);
+        mMobility.setCurrentSpeedY(STATIC_Y_SPEED);
+
+        mCoordinate = new Coordinate(START_CENTER_X, START_CENTER_Y);
+    }
+
+    public void handleKeyPressedEvent(int eventCode){
+        switch (eventCode){
+            case KeyEvent.VK_UP:
+                break;
+            case KeyEvent.VK_DOWN:
+                duck();
+                break;
+            case KeyEvent.VK_LEFT:
+                moveLeft();
+                break;
+            case KeyEvent.VK_RIGHT:
+                moveRight();
+                break;
+            case KeyEvent.VK_SPACE:
+                jump();
+                break;
+        }
+    }
+
+    public void handleKeyReleasedEvent(int eventCode){
+        switch (eventCode){
+            case KeyEvent.VK_UP:
+                break;
+            case KeyEvent.VK_DOWN:
+                setDucked(false);
+                break;
+            case KeyEvent.VK_LEFT:
+                stopLeft();
+                break;
+            case KeyEvent.VK_RIGHT:
+                stopRight();
+                break;
+            case KeyEvent.VK_SPACE:
+                break;
+        }
     }
 
     public void update(){
-        // Moves Character or Scrolls Background accordingly.
-        if (speedX < 0) {
-            centerX += speedX;
-        }
+        handleXMovement();
+        handleYMovement();
+        handleJumping();
+        handleLeftOutOfBounds();
+    }
 
-        if (speedX <= 0) {
+    private void handleXMovement(){
+        // Moves Character or Scrolls Background accordingly.
+        if(mMobility.isMovingLeft()){
+            mCoordinate.moveHorizontal(mMobility.getCurrentSpeedX());
+        }
+        if(mMobility.isMovingLeft() || mMobility.isStopped()){
             mMainCharacterCallback.setBackgroundSpeed(0);
         }
-        if (centerX <= 200 && speedX > 0) {
-            centerX += speedX;
+        if (mCoordinate.getX() <= RIGHT_MOVEMENT_BARRIER && mMobility.isMovingRight()){
+            mCoordinate.moveHorizontal(mMobility.getCurrentSpeedX());
         }
-        if (speedX > 0 && centerX >200){
-            mMainCharacterCallback.setBackgroundSpeed(-MOVESPEED);
-        }
-
-        // Updates Y Position
-        centerY += speedY;
-        if (centerY + speedY >= GROUND) {
-            centerY = GROUND;
-        }
-
-        // Handles Jumping
-        if (jumped) {
-            speedY += 1;
-            if (centerY + speedY >= GROUND) {
-                centerY = GROUND;
-                speedY = 0;
-                jumped = false;
-                mSpriteState = SpriteState.STANDING;
-            }
-        }
-
-        // Prevents going beyond X coordinate of 0
-        if (centerX + speedX <= 60) {
-            centerX = 61;
+        if(mMobility.isMovingRight() && mCoordinate.getX() > RIGHT_MOVEMENT_BARRIER){
+            mMainCharacterCallback.setBackgroundSpeed( -mMobility.getMoveSpeedX() );
         }
     }
+
+    private void handleLeftOutOfBounds(){
+        if(mCoordinate.getX() + mMobility.getCurrentSpeedX() <= LEFT_MOVEMENT_BARRIER){
+            mCoordinate.setX(LEFT_MOVEMENT_BARRIER+1);
+        }
+    }
+
+    private void handleJumping(){
+        if (jumped){
+            System.out.println("#handleJumping jumped");
+            mMobility.accelerateY(1);
+            if(mCoordinate.getY() + mMobility.getCurrentSpeedY() >= GROUND){//going to fall through ground
+                mCoordinate.setY(GROUND);//land on ground
+                mMobility.stopMovingY();
+                jumped = false;// done jumping
+                mSpriteState = SpriteState.STANDING;
+            }
+        } else{
+        }
+    }
+
+    private void handleYMovement(){
+        mCoordinate.moveVertical(mMobility.getCurrentSpeedY());
+        if(mCoordinate.getY() + mMobility.getCurrentSpeedY() >= GROUND){
+            mCoordinate.setY(GROUND);
+        }
+    }
+
     public void moveRight() {
         if(!ducked){
-            speedX = MOVESPEED;
+            setMovingRight(true);
+            mMobility.startMovingRight();
         }
     }
 
     public void moveLeft() {
         if(!ducked){
-            speedX = -MOVESPEED;
+            setMovingLeft(true);
+            mMobility.startMovingLeft();
         }
     }
 
@@ -105,7 +169,7 @@ public class Robot {
 
     public void stop() {
         if (!isMovingRight() && !isMovingLeft() ) {
-            speedX = 0;
+            mMobility.stopMovingX();
         }
 
         if (!isMovingRight() && isMovingLeft()) {
@@ -118,17 +182,26 @@ public class Robot {
     }
 
     public void jump() {
+        System.out.println("#jump");
         if (!jumped) {
-            speedY = JUMPSPEED;
+            mMobility.startMovingUp();
             jumped = true;
             mSpriteState = SpriteState.JUMPING;
         }
 
     }
 
-    public Image getImage(){
+    private void duck(){
+        if(!isJumped()){
+            setDucked(true);
+            mMobility.stopMovingX();
+        }
+    }
+
+    public Image getCurrentImage(){
         return sImageHolder.getImage(getCurrentResource());
     }
+
     private String getCurrentResource(){
         String resourceName = null;
         switch (mSpriteState) {
@@ -144,27 +217,22 @@ public class Robot {
         }
         return resourceName;
     }
+
+    @Override
+    public void draw(Graphics graphics) {
+        sImageHolder.draw(graphics, getCurrentImage(), buildPointForDraw());
+    }
+
     public enum SpriteState{
         STANDING, DUCKED, JUMPING
     }
-    public int getCenterX() {
-        return centerX;
-    }
 
-    public int getCenterY() {
-        return centerY;
+    private Point buildPointForDraw(){
+        return mCoordinate.pointFromOffsetPosition(HORIZTONAL_CENTER_OFFSET, VERTICAL_CENTER_OFFSET);
     }
 
     public boolean isJumped() {
         return jumped;
-    }
-
-    public int getSpeedX() {
-        return speedX;
-    }
-
-    public int getSpeedY() {
-        return speedY;
     }
 
     public boolean isMovingLeft() {
@@ -192,25 +260,9 @@ public class Robot {
         mSpriteState = ducked ? SpriteState.DUCKED : SpriteState.STANDING;
     }
 
-    public void setSpeedY(int speedY) {
-        this.speedY = speedY;
-    }
-
     public void setJumped(boolean jumped) {
         this.jumped = jumped;
         mSpriteState = jumped ? SpriteState.JUMPING : SpriteState.STANDING;
-    }
-
-    public void setSpeedX(int speedX) {
-        this.speedX = speedX;
-    }
-
-    public void setCenterX(int centerX) {
-        this.centerX = centerX;
-    }
-
-    public void setCenterY(int centerY) {
-        this.centerY = centerY;
     }
 
 }

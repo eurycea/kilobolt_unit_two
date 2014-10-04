@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseBackground {
+public class BaseBackground implements DrawActorInterface {
     private List<BackgroundSegment> mBackgroundSegments;
     private int width;
     private int speed;
@@ -37,7 +37,7 @@ public class BaseBackground {
     }
 
 
-
+    @Override
     public void draw(Graphics graphics){
         for(BackgroundSegment segment: mBackgroundSegments){
             segment.draw(graphics);
