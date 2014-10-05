@@ -12,9 +12,10 @@ import com.palisade.kilobolt.stat.Mobility;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 
-public class Robot implements DrawActorInterface, Health.HasHealth{
+public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjectile.ProjectileParentInterface{
 
     final int JUMPSPEED = -15;
     final int MOVESPEED = 5;
@@ -28,6 +29,9 @@ public class Robot implements DrawActorInterface, Health.HasHealth{
     final int HORIZTONAL_CENTER_OFFSET = 61;
     final int VERTICAL_CENTER_OFFSET = 63;
 
+    private final int PROJECTILE_DRAW_OFFSET_VERTICAL = 25;
+    private final int PROJECTILE_DRAW_OFFSET_HORIZONTAL = -45;
+
     private boolean jumped = false;
     private boolean movingLeft = false;
     private boolean movingRight = false;
@@ -39,6 +43,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth{
     private Health mHealth;
     private ImageHolder sImageHolder;
     private MainCharacterInterface mMainCharacterCallback;
+    private ArrayList<BaseProjectile> mProjectiles;
 
     public Robot(Applet app) {
         try{
@@ -53,6 +58,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth{
         mMobility.setCurrentSpeedY(STATIC_Y_SPEED);
         mCoordinate = new Coordinate(START_CENTER_X, START_CENTER_Y);
         mHealth = new Health(MAX_HEALTH);
+        mProjectiles = new ArrayList<>();
     }
 
     public void handleKeyPressedEvent(int eventCode){
@@ -70,6 +76,9 @@ public class Robot implements DrawActorInterface, Health.HasHealth{
                 break;
             case KeyEvent.VK_SPACE:
                 jump();
+                break;
+            case KeyEvent.VK_A:
+                fire();
                 break;
         }
     }
@@ -97,6 +106,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth{
         updateYMovement();
         updateJumping();
         updateCheckLeftOutOfBounds();
+        updateProjectiles();
     }
 
     private void updateXMovement(){
@@ -139,6 +149,19 @@ public class Robot implements DrawActorInterface, Health.HasHealth{
         if(mCoordinate.getY() + mMobility.getCurrentSpeedY() >= GROUND){
             mCoordinate.setY(GROUND);
         }
+    }
+
+    private void updateProjectiles(){
+        try{
+            if(mProjectiles.size() > 0){
+                for(BaseProjectile projectile : mProjectiles){
+                    projectile.update();
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public void moveRight() {
@@ -218,11 +241,34 @@ public class Robot implements DrawActorInterface, Health.HasHealth{
     @Override
     public void draw(Graphics graphics) {
         sImageHolder.draw(graphics, getCurrentImage(), getCurrentPoint());
+        drawProjectiles(graphics);
+    }
+    private void drawProjectiles(Graphics graphics){
+        for(BaseProjectile projectile: mProjectiles){
+            projectile.draw(graphics);
+        }
     }
 
     @Override
     public void takeDamage(int damage) {
         mHealth.damage(damage);
+    }
+
+    @Override
+    public void remove(BaseProjectile projectile) {
+
+    }
+
+    @Override
+    public boolean isOutsideView(Point point, int maxDistance) {
+        return mCoordinate.distanceFromPoint(point) > maxDistance;
+    }
+
+    @Override
+    public void fire() {
+        if(!isDucked()){
+            mProjectiles.add(new BaseProjectile(this, mCoordinate.pointFromOffsetPosition(PROJECTILE_DRAW_OFFSET_HORIZONTAL, PROJECTILE_DRAW_OFFSET_VERTICAL)));
+        }
     }
 
     public enum SpriteState{

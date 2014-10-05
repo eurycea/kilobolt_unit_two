@@ -35,15 +35,21 @@ public class BackgroundSegment implements DrawActorInterface{
 
     public void update(int speed){
         scrollPosition(speed);
-        if(mCoordinate.getX()<= -width){
-            mCoordinate.moveRight(2*width);
-        }
+        update();
     }
 
     @Override
     public void draw(Graphics graphics){
         sImageHolder.draw(graphics, getCurrentImage(), mCoordinate.pointFromCurrentPosition());
     }
+
+    @Override
+    public void update() {
+        if(mCoordinate.getX()<= -width){
+            mCoordinate.moveRight(2*width);
+        }
+    }
+
     public void setId(int id){
         this.id = id;
     }

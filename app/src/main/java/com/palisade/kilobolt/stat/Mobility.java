@@ -38,8 +38,14 @@ public class Mobility {
     public void startMovingLeft(){
         setCurrentSpeedX(-getMoveSpeedX());
     }
+
     public void stopMovingX(){
         setCurrentSpeedX(0);
+    }
+
+    public void startMoving(){
+        setCurrentSpeedX(getMoveSpeedX());
+        setCurrentSpeedY(getMoveSpeedY());
     }
 
     public void startMovingUp(){

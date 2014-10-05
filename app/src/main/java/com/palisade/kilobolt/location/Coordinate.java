@@ -2,6 +2,7 @@ package com.palisade.kilobolt.location;
 
 
 import com.palisade.kilobolt.location.Point;
+import com.palisade.kilobolt.stat.Mobility;
 
 public class Coordinate extends Point {
     private final Point mOrigin;
@@ -48,4 +49,14 @@ public class Coordinate extends Point {
         return distanceFromPoint(mOrigin);
     }
 
+    public void update(Mobility mobility){
+        updateVertical(mobility);
+        updateHorizontal(mobility);
+    }
+    public void updateHorizontal(Mobility mobility){
+        moveHorizontal(mobility.getCurrentSpeedX());
+    }
+    public void updateVertical(Mobility mobility){
+        moveVertical(mobility.getCurrentSpeedY());
+    }
 }
