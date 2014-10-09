@@ -1,15 +1,16 @@
 package com.palisade.kilobolt.actor;
 
-import com.palisade.kilobolt.graphic.DrawActorInterface;
-import com.palisade.kilobolt.graphic.ImageHolder;
-import com.palisade.kilobolt.location.*;
-import com.palisade.kilobolt.location.Point;
+import com.palisade.framework.DrawActorInterface;
+import com.palisade.framework.location.Coordinate;
+import com.palisade.framework.image.ImageHolder;
+import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.stat.Defense;
 import com.palisade.kilobolt.stat.Defense.HasArmor;
 import com.palisade.kilobolt.stat.Health;
 import com.palisade.kilobolt.stat.Health.HasHealth;
 import com.palisade.kilobolt.stat.Mobility;
 import com.palisade.kilobolt.stat.Offense;
+import com.palisade.kilobolt.actor.SpriteStates.EnemySpriteState;
 
 import java.awt.*;
 
@@ -31,10 +32,6 @@ abstract public class AbstractEnemy implements DrawActorInterface, HasHealth{
         mMobility = new Mobility(0,0);
         mCoordinate = new Coordinate(0, 0);
         mSpriteState = EnemySpriteState.NORMAL;
-    }
-
-    public enum EnemySpriteState{
-        NORMAL, ATTACKING, JUMPING;
     }
 
     private String getStateResource(EnemySpriteState state){

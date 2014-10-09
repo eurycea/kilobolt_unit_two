@@ -1,11 +1,13 @@
 package com.palisade.kilobolt.graphic;
 
 
-import com.palisade.kilobolt.location.Coordinate;
+import com.palisade.framework.DrawActorInterface;
+import com.palisade.framework.image.ImageHolder;
+import com.palisade.framework.location.Coordinate;
 
 import java.awt.*;
 
-public class BackgroundSegment implements DrawActorInterface{
+public class BackgroundSegment implements DrawActorInterface {
     private String mResource;
     private int width;
     private Coordinate mCoordinate;

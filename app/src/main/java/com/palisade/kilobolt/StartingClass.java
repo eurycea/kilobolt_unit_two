@@ -6,9 +6,9 @@ import com.palisade.kilobolt.actor.MainCharacterInterface;
 import com.palisade.kilobolt.constant.Constants;
 import com.palisade.kilobolt.constant.TextConstants;
 import com.palisade.kilobolt.graphic.BaseBackground;
-import com.palisade.kilobolt.graphic.ImageHolder;
+import com.palisade.framework.image.ImageHolder;
 import com.palisade.kilobolt.actor.Robot;
-import com.palisade.kilobolt.location.Coordinate;
+import com.palisade.framework.location.Coordinate;
 import com.palisade.kilobolt.stat.Mobility;
 
 import java.applet.Applet;

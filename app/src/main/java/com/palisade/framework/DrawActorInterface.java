@@ -1,4 +1,4 @@
-package com.palisade.kilobolt.graphic;
+package com.palisade.framework;
 
 import java.awt.*;
 

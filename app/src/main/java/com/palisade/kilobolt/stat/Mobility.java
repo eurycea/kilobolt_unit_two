@@ -38,25 +38,35 @@ public class Mobility {
     public void startMovingLeft(){
         setCurrentSpeedX(-getMoveSpeedX());
     }
-
-    public void stopMovingX(){
-        setCurrentSpeedX(0);
+    public void startMovingUp(){
+        setCurrentSpeedY(getMoveSpeedY());
     }
+
 
     public void startMoving(){
         setCurrentSpeedX(getMoveSpeedX());
         setCurrentSpeedY(getMoveSpeedY());
     }
 
-    public void startMovingUp(){
-        setCurrentSpeedY(getMoveSpeedY());
+    public void stopMoving(){
+        stopMovingX();
+        stopMovingY();
     }
     public void stopMovingY(){
         setCurrentSpeedY(0);
     }
+    public void stopMovingX(){
+        setCurrentSpeedX(0);
+    }
+
+
+
+
+
     public void accelerateY(int acceleration){
         setCurrentSpeedY(getCurrentSpeedY() + acceleration);
     }
+
     public void accelerateX(int acceleration){
         setCurrentSpeedX(getCurrentSpeedX() + acceleration);
     }

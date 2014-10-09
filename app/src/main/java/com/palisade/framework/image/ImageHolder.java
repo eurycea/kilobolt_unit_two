@@ -1,6 +1,6 @@
-package com.palisade.kilobolt.graphic;
+package com.palisade.framework.image;
 
-import com.palisade.kilobolt.location.Point;
+import com.palisade.framework.location.Point;
 
 import java.applet.Applet;
 import java.awt.*;

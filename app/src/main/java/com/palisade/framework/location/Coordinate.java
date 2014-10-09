@@ -1,7 +1,6 @@
-package com.palisade.kilobolt.location;
+package com.palisade.framework.location;
 
 
-import com.palisade.kilobolt.location.Point;
 import com.palisade.kilobolt.stat.Mobility;
 
 public class Coordinate extends Point {

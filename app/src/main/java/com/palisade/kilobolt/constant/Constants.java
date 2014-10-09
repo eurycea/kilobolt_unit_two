@@ -4,6 +4,9 @@ public class Constants {
     public static final String RES_BACKGROUND ="background.png";
 
     public static final String RES_MAIN_CHARACHTER_STANDING = "character.png";
+    public static final String RES_MAIN_CHARACHTER_STANDING2 = "character2.png";
+    public static final String RES_MAIN_CHARACHTER_STANDING3 = "character3.png";
+
     public static final String RES_MAIN_CHARACHTER_DUCKED = "character_ducked.png";
     public static final String RES_MAIN_CHARACHTER_JUMPED = "character_jumped.png";
 

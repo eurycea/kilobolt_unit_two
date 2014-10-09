@@ -1,9 +1,8 @@
 package com.palisade.kilobolt.actor;
 
 
-import com.palisade.kilobolt.actor.AbstractEnemy;
 import com.palisade.kilobolt.constant.Constants;
-import com.palisade.kilobolt.location.Point;
+import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.stat.Mobility;
 
 public class Heliboy extends AbstractEnemy {

@@ -1,13 +1,17 @@
 package com.palisade.kilobolt.actor;
 
 
+import com.palisade.framework.Animation;
 import com.palisade.kilobolt.constant.Constants;
-import com.palisade.kilobolt.graphic.DrawActorInterface;
-import com.palisade.kilobolt.graphic.ImageHolder;
-import com.palisade.kilobolt.location.Coordinate;
-import com.palisade.kilobolt.location.Point;
+import com.palisade.framework.DrawActorInterface;
+import com.palisade.framework.image.ImageHolder;
+import com.palisade.framework.location.Coordinate;
+import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.stat.Health;
+import com.palisade.kilobolt.stat.Health.HasHealth;
 import com.palisade.kilobolt.stat.Mobility;
+import com.palisade.kilobolt.actor.BaseProjectile.ProjectileParentInterface;
+import com.palisade.kilobolt.actor.SpriteStates.MainCharacterSpriteState;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -15,7 +19,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 
-public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjectile.ProjectileParentInterface{
+public class Robot implements DrawActorInterface, HasHealth, ProjectileParentInterface {
 
     final int JUMPSPEED = -15;
     final int MOVESPEED = 5;
@@ -37,13 +41,14 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
     private boolean movingRight = false;
     private boolean ducked = false;
 
-    private SpriteState mSpriteState;
+    private MainCharacterSpriteState mSpriteState;
     private Mobility mMobility;
     private Coordinate mCoordinate;
     private Health mHealth;
     private ImageHolder sImageHolder;
     private MainCharacterInterface mMainCharacterCallback;
     private ArrayList<BaseProjectile> mProjectiles;
+    private Animation mNormalAnimation;
 
     public Robot(Applet app) {
         try{
@@ -51,7 +56,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
         }catch (ClassCastException e){
             throw new ClassCastException(app.getClass() + " must implement MainCharacterInterface");
         }
-        mSpriteState = SpriteState.STANDING;
+        mSpriteState = MainCharacterSpriteState.STANDING;
         sImageHolder = ImageHolder.getInstance();
 
         mMobility = new Mobility(MOVESPEED, JUMPSPEED);
@@ -59,6 +64,13 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
         mCoordinate = new Coordinate(START_CENTER_X, START_CENTER_Y);
         mHealth = new Health(MAX_HEALTH);
         mProjectiles = new ArrayList<>();
+        buildNormalAnimation();
+    }
+    private void buildNormalAnimation(){
+        mNormalAnimation = new Animation(mCoordinate);
+        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING, 500);
+        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING2, 500);
+        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING3, 500);
     }
 
     public void handleKeyPressedEvent(int eventCode){
@@ -107,6 +119,11 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
         updateJumping();
         updateCheckLeftOutOfBounds();
         updateProjectiles();
+        updateAnimation();
+    }
+
+    private void updateAnimation(){
+        mNormalAnimation.update();
     }
 
     private void updateXMovement(){
@@ -127,7 +144,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
 
     private void updateCheckLeftOutOfBounds(){
         if(mCoordinate.getX() + mMobility.getCurrentSpeedX() <= LEFT_MOVEMENT_BARRIER){
-            mCoordinate.setX(LEFT_MOVEMENT_BARRIER+1);
+            mCoordinate.setX(LEFT_MOVEMENT_BARRIER + 1);
         }
     }
 
@@ -138,7 +155,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
                 mCoordinate.setY(GROUND);//land on ground
                 mMobility.stopMovingY();
                 jumped = false;// done jumping
-                mSpriteState = SpriteState.STANDING;
+                mSpriteState = MainCharacterSpriteState.STANDING;
             }
         } else{
         }
@@ -164,6 +181,9 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
 
     }
 
+    /*
+        User Input Action
+     */
     public void moveRight() {
         if(!ducked){
             setMovingRight(true);
@@ -206,7 +226,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
         if (!jumped) {
             mMobility.startMovingUp();
             jumped = true;
-            mSpriteState = SpriteState.JUMPING;
+            mSpriteState = MainCharacterSpriteState.JUMPING;
         }
 
     }
@@ -217,6 +237,10 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
             mMobility.stopMovingX();
         }
     }
+
+    /*
+        Image and Drawing
+     */
 
     public Image getCurrentImage(){
         return sImageHolder.getImage(getCurrentResource());
@@ -240,9 +264,14 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
 
     @Override
     public void draw(Graphics graphics) {
-        sImageHolder.draw(graphics, getCurrentImage(), getCurrentPoint());
+        if(mSpriteState == MainCharacterSpriteState.STANDING){
+            mNormalAnimation.draw(graphics, mCoordinate);
+        } else {
+            sImageHolder.draw(graphics, getCurrentImage(), getCurrentPoint());
+        }
         drawProjectiles(graphics);
     }
+
     private void drawProjectiles(Graphics graphics){
         for(BaseProjectile projectile: mProjectiles){
             projectile.draw(graphics);
@@ -253,6 +282,11 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
     public void takeDamage(int damage) {
         mHealth.damage(damage);
     }
+
+    /*
+        Projectile Parent
+
+     */
 
     @Override
     public void remove(BaseProjectile projectile) {
@@ -271,9 +305,7 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
         }
     }
 
-    public enum SpriteState{
-        STANDING, DUCKED, JUMPING
-    }
+
 
     private Point getCurrentPoint(){
         return mCoordinate.pointFromOffsetPosition(HORIZTONAL_CENTER_OFFSET, VERTICAL_CENTER_OFFSET);
@@ -305,13 +337,14 @@ public class Robot implements DrawActorInterface, Health.HasHealth, BaseProjecti
 
     public void setDucked(boolean ducked) {
         this.ducked = ducked;
-        mSpriteState = ducked ? SpriteState.DUCKED : SpriteState.STANDING;
+        mSpriteState = ducked ? MainCharacterSpriteState.DUCKED : MainCharacterSpriteState.STANDING;
     }
 
     public void setJumped(boolean jumped) {
         this.jumped = jumped;
-        mSpriteState = jumped ? SpriteState.JUMPING : SpriteState.STANDING;
+        mSpriteState = jumped ? MainCharacterSpriteState.JUMPING : MainCharacterSpriteState.STANDING;
     }
+
     public Coordinate getCoordinate(){
         return mCoordinate;
     }

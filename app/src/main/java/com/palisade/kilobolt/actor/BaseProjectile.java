@@ -1,16 +1,15 @@
 package com.palisade.kilobolt.actor;
 
-import com.palisade.kilobolt.constant.Constants;
-import com.palisade.kilobolt.graphic.DrawActorInterface;
-import com.palisade.kilobolt.location.*;
+import com.palisade.framework.DrawActorInterface;
+import com.palisade.framework.location.Coordinate;
 import com.palisade.kilobolt.stat.Mobility;
-import com.palisade.kilobolt.location.Point;
+import com.palisade.framework.location.Point;
 
 import java.awt.*;
 
 public class BaseProjectile implements DrawActorInterface{
     private final int DEFAULT_PROJECTILE_WIDTH = 15;
-    private final int DEFAULT_PROJECTILE_HEIGTH = 10;
+    private final int DEFAULT_PROJECTILE_HEIGTH = 7;
     private final int DEFAULT_PROJECTILE_SPEED_X = 10;
     private final int DEFAULT_PROJECTILE_SPEED_Y = 0;
     private final int MAX_DISTANCE_FROM_PARENT = 2000;

@@ -1,4 +1,4 @@
-package com.palisade.kilobolt.location;
+package com.palisade.framework.location;
 
 
 public class Point {

@@ -1,6 +1,8 @@
 package com.palisade.kilobolt.graphic;
 
 
+import com.palisade.framework.DrawActorInterface;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
