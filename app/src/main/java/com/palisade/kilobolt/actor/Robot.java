@@ -68,9 +68,9 @@ public class Robot implements DrawActorInterface, HasHealth, ProjectileParentInt
     }
     private void buildNormalAnimation(){
         mNormalAnimation = new Animation(mCoordinate);
-        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING, 500);
-        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING2, 500);
-        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING3, 500);
+        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING, 99);
+        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING2, 100);
+        mNormalAnimation.addFrame(Constants.RES_MAIN_CHARACHTER_STANDING3, 101);
     }
 
     public void handleKeyPressedEvent(int eventCode){
@@ -265,7 +265,7 @@ public class Robot implements DrawActorInterface, HasHealth, ProjectileParentInt
     @Override
     public void draw(Graphics graphics) {
         if(mSpriteState == MainCharacterSpriteState.STANDING){
-            mNormalAnimation.draw(graphics, mCoordinate);
+            mNormalAnimation.draw(graphics, mCoordinate.pointFromOffsetPosition(HORIZTONAL_CENTER_OFFSET, VERTICAL_CENTER_OFFSET));
         } else {
             sImageHolder.draw(graphics, getCurrentImage(), getCurrentPoint());
         }

@@ -1,8 +1,9 @@
 package com.palisade.framework;
 
 import com.palisade.framework.image.ImageHolder;
-import com.palisade.framework.util.ElapsedTimer;
+import com.palisade.framework.time.ElapsedTimer;
 import com.palisade.framework.location.Point;
+import com.palisade.kilobolt.constant.Constants;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -36,28 +37,49 @@ public class Animation {
     }
     public synchronized void addFrame(String resource, long duration){
         totalDuration += duration;
-        frames.add(new ResourceAnimationFrame( resource, duration));
+        frames.add(new ResourceAnimationFrame(resource, totalDuration));
+    }
+    public synchronized void addFrames(String[] resources, long durationEach){
+        for(String resource: resources){
+            addFrame(resource, durationEach);
+        }
     }
 
 
 
     private AnimationFrame getFrame(int index){
         if (index < frames.size()){
-            return frames.get(index);
+            AnimationFrame frame = frames.get(index);
+            if (frame != null){
+                return frame;
+            } else{
+                throw new NullPointerException("Requested frame was in range but was null");
+            }
+        } else {
+         throw new IndexOutOfBoundsException("requested frame "+index+" is out of bounds. there are currently "+frames.size() +" frames.");
         }
-        return null;
     }
     private AnimationFrame getCurrentFrame(){
-        if(currentFrame > frames.size()){
+        if(currentFrame >= frames.size()){
             currentFrame = 0;
         }
         return  getFrame(currentFrame);
     }
 
+    public String getCurrentResource(){
+        try {
+            ResourceAnimationFrame frame = (ResourceAnimationFrame) getCurrentFrame();
+            return frame.getResourceString();
+        } catch (ClassCastException e){
+            e.printStackTrace();
+            return Constants.ERROR_RESOURCE;
+        }
 
-    public void draw(Graphics graphics, Point point) {
+    }
+    public synchronized void draw(Graphics graphics, Point point) {
         getCurrentFrame().draw(graphics, mImageHolder, point);
     }
+
     private synchronized void drawWithTime(){
 
     }
@@ -72,6 +94,7 @@ public class Animation {
                 currentFrame = 0;
             } else {
                 while (mElapsedTimer.timeSinceRegistration(timerRegistrationKey) > getCurrentFrame().getEndTime()){
+
                     currentFrame++;
                 }
             }

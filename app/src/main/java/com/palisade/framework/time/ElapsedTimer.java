@@ -1,9 +1,8 @@
-package com.palisade.framework.util;
+package com.palisade.framework.time;
 
 import java.util.HashMap;
 
 public class ElapsedTimer {
-    private static ElapsedTimer sInstance;
     private long timeOfInitialization;
     private HashMap<String, Long> times;
     private HashMap<String, Long> registrationTimes;
@@ -22,6 +21,13 @@ public class ElapsedTimer {
         final long registrationTime = getCurrentTime();
         times.put(key, registrationTime);
         registrationTimes.put(key, registrationTime);
+    }
+    public void register(Object object){
+        register(object.getClass().toString() + object.hashCode());
+    }
+
+    public long getInitializationTime(){
+        return timeOfInitialization;
     }
 
     //Updates

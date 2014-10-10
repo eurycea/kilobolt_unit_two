@@ -1,6 +1,7 @@
 package com.palisade.kilobolt.actor;
 
 
+import com.palisade.framework.Animation;
 import com.palisade.kilobolt.constant.Constants;
 import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.stat.Mobility;
@@ -11,15 +12,28 @@ public class Heliboy extends AbstractEnemy {
     private final int VERTICAL_IMAGE_OFFSET = 48;
     private final int HORIZONT_IMAGE_OFFSET = 48;
     private final int HOVER_AMPLITUDE = 10;
+    private Animation mAnimation;
 
     public Heliboy(EnemyInterface enemyInterface, int startX, int startY){
         super(enemyInterface);
         mCoordinate.setPosition(startX, startY);
+        builNormalAnimation();
+    }
+
+    private void builNormalAnimation(){
+        mAnimation = new Animation(mCoordinate);
+        mAnimation.addFrames(Constants.HELIBOY_NORMAL_RESOURCES, 40);
     }
 
     @Override
     protected String getResNormal() {
-        return Constants.RES_ENEMY_ONE_NORMAL;
+        return mAnimation.getCurrentResource();
+    }
+
+    @Override
+    public void update() {
+        mAnimation.update();
+        super.update();
     }
 
     @Override

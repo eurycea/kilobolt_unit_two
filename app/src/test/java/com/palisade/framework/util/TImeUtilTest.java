@@ -1,5 +1,7 @@
 package com.palisade.framework.util;
 
+import com.palisade.framework.time.ElapsedTimer;
+import com.palisade.framework.time.TimedRunner;
 import junit.framework.TestCase;
 
 public class TImeUtilTest extends TestCase {
@@ -56,6 +58,40 @@ public class TImeUtilTest extends TestCase {
             assertFalse(lastTime1 == lastTime2);
             assertTrue(elapsedTimer.timeSinceLastUpdate(DEFAULT_TIME_KEY) >=4000);
             assertTrue(elapsedTimer.timeSinceLastUpdate(secondKey) >= 2000 && elapsedTimer.timeSinceLastUpdate(secondKey) < 4000 );
+        }
+    }
+
+    public void testTimedRunner() throws InterruptedException{
+        synchronized (lock){
+            int counter = 0;
+            ElapsedTimer timer = new ElapsedTimer();
+            
+            timer.register("testTimedRunner");
+
+            TimedRunner timedRunner = new TimedRunner(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        Thread.sleep(100);
+                    } catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            timer.updateTime("testTimedRunner");
+            timedRunner.runFor(1000);
+            assertTrue(timedRunner.getRunCount() == 10);
+
+            timedRunner.resetRunCount();
+            assertTrue(timedRunner.getRunCount() == 0);
+
+            timedRunner.runFor(1);
+            assertTrue(timedRunner.getRunCount() == 1);
+
+            timedRunner.resetRunCount();
+            timedRunner.runFor(1010);
+            assertTrue(timedRunner.getRunCount() == 11);
         }
     }
 
