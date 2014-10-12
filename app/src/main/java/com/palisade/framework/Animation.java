@@ -2,7 +2,6 @@ package com.palisade.framework;
 
 import com.palisade.framework.image.ImageHolder;
 import com.palisade.framework.time.ElapsedTimer;
-import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.constant.Constants;
 
 import java.awt.*;

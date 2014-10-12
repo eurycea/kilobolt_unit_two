@@ -65,7 +65,7 @@ public class TImeUtilTest extends TestCase {
         synchronized (lock){
             int counter = 0;
             ElapsedTimer timer = new ElapsedTimer();
-            
+
             timer.register("testTimedRunner");
 
             TimedRunner timedRunner = new TimedRunner(new Runnable() {

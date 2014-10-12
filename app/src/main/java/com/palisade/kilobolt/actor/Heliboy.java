@@ -3,8 +3,9 @@ package com.palisade.kilobolt.actor;
 
 import com.palisade.framework.Animation;
 import com.palisade.kilobolt.constant.Constants;
-import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.stat.Mobility;
+
+import java.awt.*;
 
 public class Heliboy extends AbstractEnemy {
     private final int MAX_HEALTH = 20;
@@ -16,7 +17,7 @@ public class Heliboy extends AbstractEnemy {
 
     public Heliboy(EnemyInterface enemyInterface, int startX, int startY){
         super(enemyInterface);
-        mCoordinate.setPosition(startX, startY);
+        mCoordinate.setLocation(startX, startY);
         builNormalAnimation();
     }
 

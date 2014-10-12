@@ -3,7 +3,6 @@ package com.palisade.kilobolt.actor;
 import com.palisade.framework.DrawActorInterface;
 import com.palisade.framework.location.Coordinate;
 import com.palisade.kilobolt.stat.Mobility;
-import com.palisade.framework.location.Point;
 
 import java.awt.*;
 
@@ -24,7 +23,7 @@ public class BaseProjectile implements DrawActorInterface{
         mParent = parent;
     }
     public BaseProjectile(ProjectileParentInterface parent, Point point){
-        mCoordinate = new Coordinate(point.getX(), point.getY());
+        mCoordinate = new Coordinate((int) point.getX(), (int) point.getY());
         mMobility = new Mobility(DEFAULT_PROJECTILE_SPEED_X, DEFAULT_PROJECTILE_SPEED_Y);
         mMobility.startMoving();
         mParent = parent;
@@ -34,7 +33,7 @@ public class BaseProjectile implements DrawActorInterface{
     @Override
     public void draw(Graphics graphics) {
         graphics.setColor(Color.YELLOW);
-        graphics.fillOval(mCoordinate.getX() , mCoordinate.getY(), DEFAULT_PROJECTILE_WIDTH, DEFAULT_PROJECTILE_HEIGTH);
+        graphics.fillOval((int) mCoordinate.getX() , (int) mCoordinate.getY(), DEFAULT_PROJECTILE_WIDTH, DEFAULT_PROJECTILE_HEIGTH);
     }
 
     @Override

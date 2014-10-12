@@ -3,7 +3,6 @@ package com.palisade.kilobolt.actor;
 import com.palisade.framework.DrawActorInterface;
 import com.palisade.framework.location.Coordinate;
 import com.palisade.framework.image.ImageHolder;
-import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.stat.Defense;
 import com.palisade.kilobolt.stat.Defense.HasArmor;
 import com.palisade.kilobolt.stat.Health;

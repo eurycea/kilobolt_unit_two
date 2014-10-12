@@ -1,6 +1,5 @@
 package com.palisade.framework.image;
 
-import com.palisade.framework.location.Point;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -64,6 +63,6 @@ public class ImageHolder {
         return sApp;
     }
     public void draw(Graphics graphics, Image image, Point point){
-        graphics.drawImage(image,  point.getX(),  point.getY(), sApp);
+        graphics.drawImage(image,  (int) point.getX(),  (int) point.getY(), sApp);
     }
 }

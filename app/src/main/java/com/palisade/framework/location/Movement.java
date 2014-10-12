@@ -1,8 +1,7 @@
 package com.palisade.framework.location;
 
-/**
- * Created by nicholascraig on 10/5/14.
- */
+import java.awt.*;
+
 public class Movement {
 
     public interface Movable{

@@ -6,7 +6,6 @@ import com.palisade.kilobolt.constant.Constants;
 import com.palisade.framework.DrawActorInterface;
 import com.palisade.framework.image.ImageHolder;
 import com.palisade.framework.location.Coordinate;
-import com.palisade.framework.location.Point;
 import com.palisade.kilobolt.stat.Health;
 import com.palisade.kilobolt.stat.Health.HasHealth;
 import com.palisade.kilobolt.stat.Mobility;
