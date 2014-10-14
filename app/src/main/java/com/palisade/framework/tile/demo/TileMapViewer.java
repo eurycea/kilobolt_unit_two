@@ -46,39 +46,11 @@ public class TileMapViewer extends Applet implements TileBuilder{
 
     private static final int[][] DEFAULT_MAP= {
             {0, 0, 1,  2,  3,  4   },
-                {0, 1,  2,  3,  4, 99},
-            {18, 18, 18, 11, 15, 11  },
-                {18, 18, 11, 15, 11, 99},
-            {99, 18, 18, 11, 15, 11},
-                {99, 99, 99, 99, 99, 99},
-            {99, 18, 18, 11, 15, 11},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 0, 1,  2,  3,  4   },
-                {1, 1, 1, 1, 1, 1},
-            {99, 18, 18, 11, 15, 11  },
-
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {99, 99, 99, 99, 99, 99},
-                {99, 99, 99, 99, 99, 99},
-            {1, 1, 1, 1, 1, 1},
+                {0, 1,  2,  3,  4, 5},
+            {0, 0, 1,  2,  3,  4   },
+                {0, 1,  2,  3,  4, 5},
+            {0, 0, 1,  2,  3,  4   },
+                {0, 1,  2,  3,  4, 5},
 
     };
 
@@ -100,19 +72,15 @@ public class TileMapViewer extends Applet implements TileBuilder{
 
     @Override
     public void paint(Graphics g) {
-        tileMap.drawReverse(g, imageHolder);
+        tileMap.draw(g, imageHolder);
     }
 
     @Override
     public Tile buildTile(Point point, int value) {
 
-        return new HexagonalTile(point, new Dimension(65, 20), hexResourceMap.get(value), hexOffset);
-//        if (value == 1){
-//            return new ImageTile(point, DEFAULT_TILE_DIMENSION, imageTest);
-//        } else if(value == 0){
-//            return new ResourceTile(point, DEFAULT_TILE_DIMENSION, "pink.png");
-//        } else {
-//            return new SolidColorTile(point, DEFAULT_TILE_DIMENSION, colorMap.get(value));
-//        }
+//        return new HexagonalTile(point, new Dimension(65, 20), hexResourceMap.get(value), hexOffset);
+        int elevation = value>4 ? 1:0;
+        return new ElevatedTile(point, elevation, value);
+
     }
 }

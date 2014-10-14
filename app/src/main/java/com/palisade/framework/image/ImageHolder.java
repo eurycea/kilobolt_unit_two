@@ -48,7 +48,7 @@ public class ImageHolder {
         if(imageHashMap.containsKey(resource)){
             return imageHashMap.get(resource);
         }else{
-            System.out.println("ImageHolder loading new image");
+            System.out.println("ImageHolder loading new image: "+ resource);
             Image image = sApp.getImage(getImageURL(resource));
             imageHashMap.put(resource, image);
             return image;
