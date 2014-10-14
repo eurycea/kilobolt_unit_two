@@ -32,6 +32,13 @@ public class TileMap {
             }
         }
     }
+    public void drawReverse(Graphics graphics, ImageHolder imageHolder){
+        for(int r = rows-1; r >= 0; r--){
+            for(int c = 0; c <columns; c++){
+                mTiles[r][c].draw(graphics, imageHolder);
+            }
+        }
+    }
     public void setRawTileMap(int[][] rawMap){
         mRawMap=rawMap;
         rows = mRawMap.length;

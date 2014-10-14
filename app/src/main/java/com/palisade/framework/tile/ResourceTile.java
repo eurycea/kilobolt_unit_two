@@ -5,7 +5,7 @@ import com.palisade.framework.image.ImageHolder;
 import java.awt.*;
 
 public class ResourceTile extends Tile {
-    private String resource;
+    protected String resource;
     public ResourceTile(Point point, Dimension dimension, String resource) {
         super(point, dimension);
         this.resource = resource;

@@ -31,5 +31,8 @@ public abstract class Tile {
         mDrawLocation.setLocation(mOrigin.getX()*mSize.width, mOrigin.getY()*mSize.height);
     }
 
+    protected void setDrawLocation(Point point){
+        mDrawLocation = point;
+    }
 
 }
