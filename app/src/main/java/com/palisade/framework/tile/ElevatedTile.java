@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ElevatedTile extends Tile {
     final static int ELEVATION_UNITS = 10;
-    final static int NUMBER_OF_SUBVIEWS = 6;
+    final static int NUMBER_OF_SUBVIEWS = 4;
 
     static Map<Integer, String> hexResourceMap = new ImmutableMap.Builder<Integer, String>()
             .put(0, "hex/tileAutumn.png")
@@ -64,10 +64,11 @@ public class ElevatedTile extends Tile {
 
     public ElevatedTile(Point point, int elevation, int mapKey) {
         super(point, DEFAULT_HEX_DIMENSION);
+        this.elevation = elevation;
         mResourceKey = mapKey;
         mDrawLocation.setLocation(
                 mOrigin.getX()*mSize.width,
-                mOrigin.getY()* 2*mSize.height + elevation*-ELEVATION_UNITS);
+                mOrigin.getY()* 2*mSize.height + this.elevation*-ELEVATION_UNITS);
         isInEvenRow = getBaseLocation().getY() %2 == 0;
         if(!isInEvenRow){
             mDrawLocation.translate( 32, 0);
@@ -84,8 +85,8 @@ public class ElevatedTile extends Tile {
     }
     private void drawSubViews(Graphics graphics, ImageHolder imageHolder){
         Point subDrawLocation = new Point(mDrawLocation);
-        subDrawLocation.translate(0, NUMBER_OF_SUBVIEWS*2*ELEVATION_UNITS);//start at the bottom
-        for (int i = 0; i< NUMBER_OF_SUBVIEWS; i++){
+        subDrawLocation.translate(0, (NUMBER_OF_SUBVIEWS+elevation)*2*ELEVATION_UNITS);//start at the bottom
+        for (int i = 0; i < NUMBER_OF_SUBVIEWS + elevation; i++){
             subDrawLocation.translate(0, -2*ELEVATION_UNITS);
             imageHolder.draw(graphics, imageHolder.getImage(getAssociatedResource(mResourceKey)), subDrawLocation);
         }

@@ -12,8 +12,7 @@ public class TileMap {
     private int columns;
     private TileBuilder builder;
 
-    public TileMap(TileBuilder tileBuilder, Dimension tileDimension){
-        mTileDimension = tileDimension;
+    public TileMap(TileBuilder tileBuilder){        
         builder = tileBuilder;
     }
     public void initializeTiles(){
