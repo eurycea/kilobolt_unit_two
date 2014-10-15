@@ -54,12 +54,12 @@ public class ElevatedTile extends Tile {
         }
     }
 
-    private static Point DEF_HEX_OFFSET = new Point(32, 10);
-    private static Dimension DEFAULT_HEX_DIMENSION = new Dimension(65, 25);
-    private int elevation;
-    private Point offset;
-    private int mResourceKey;
-    private boolean isInEvenRow;
+    static Point DEF_HEX_OFFSET = new Point(32, 10);
+    static Dimension DEFAULT_HEX_DIMENSION = new Dimension(65, 25);
+    int elevation;
+    Point offset;
+    int mResourceKey;
+    boolean isInEvenRow;
 
 
     public ElevatedTile(Point point, int elevation, int mapKey) {

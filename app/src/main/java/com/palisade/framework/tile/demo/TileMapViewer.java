@@ -79,7 +79,7 @@ public class TileMapViewer extends Applet implements TileBuilder{
     public Tile buildTile(Point point, int value) {
 
 //        return new HexagonalTile(point, new Dimension(65, 20), hexResourceMap.get(value), hexOffset);
-        int elevation = value>4 ? 1:0;
+        int elevation = point.y==1 ? 6:0;
         return new ElevatedTile(point, elevation, value);
 
     }
